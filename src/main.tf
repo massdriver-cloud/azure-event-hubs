@@ -1,3 +1,10 @@
+locals {
+  capture = {
+    # converts MiB to bytes
+    build_up = var.capture.capture_buildup * 1024 * 1024
+  }
+}
+
 resource "azurerm_resource_group" "main" {
   name     = var.md_metadata.name_prefix
   location = var.azure_storage_account_data_lake.specs.azure.region
@@ -5,16 +12,17 @@ resource "azurerm_resource_group" "main" {
 }
 
 resource "azurerm_eventhub_namespace" "main" {
-  name                     = var.md_metadata.name_prefix
-  location                 = azurerm_resource_group.main.location
-  resource_group_name      = azurerm_resource_group.main.name
-  sku                      = var.hub.sku
-  auto_inflate_enabled     = var.hub.enable_auto_inflate
-  capacity                 = var.hub.enable_auto_inflate ? null : var.hub.throughput_units
-  maximum_throughput_units = var.hub.enable_auto_inflate ? var.hub.max_throughput_units : null
-  zone_redundant           = var.hub.zone_redundant
-  minimum_tls_version      = "1.2"
-  tags                     = var.md_metadata.default_tags
+  name                         = var.md_metadata.name_prefix
+  location                     = azurerm_resource_group.main.location
+  resource_group_name          = azurerm_resource_group.main.name
+  sku                          = var.hub.sku
+  auto_inflate_enabled         = var.hub.sku == "Standard" ? var.hub.enable_auto_inflate : false
+  capacity                     = var.hub.enable_auto_inflate ? null : var.hub.throughput_units
+  maximum_throughput_units     = var.hub.enable_auto_inflate ? var.hub.throughput_units : null
+  zone_redundant               = var.hub.zone_redundant
+  minimum_tls_version          = "1.2"
+  local_authentication_enabled = false
+  tags                         = var.md_metadata.default_tags
 
   identity {
     type = "SystemAssigned"
@@ -32,7 +40,7 @@ resource "azurerm_eventhub" "main" {
     enabled             = true
     encoding            = var.capture.arvo_encoding
     interval_in_seconds = var.capture.capture_interval
-    size_limit_in_bytes = var.capture.capture_buildup
+    size_limit_in_bytes = local.capture.build_up
     destination {
       name                = "EventHubArchive.AzureBlockBlob"
       archive_name_format = "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}"

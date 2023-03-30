@@ -2,7 +2,7 @@ schema: draft-07
 name: "azure-event-hubs"
 description: "Event Hubs is a modern big data streaming platform and event ingestion service that can seamlessly integrate with other Azure and Microsoft services. The service can process millions of events per second with low latency. The data sent to an event hub (Event Hubs instance) can be transformed and stored by using any real-time analytics providers or batching or storage adapters."
 source_url: github.com/massdriver-cloud/azure-event-hubs
-access: private
+access: public
 type: infrastructure
 
 MonitorAlarmMetric: &monitor_alarm_metric
@@ -112,13 +112,16 @@ params:
         sku: Standard
         partition_count: 2
         throughput_units: 2
+      capture:
+        capture_buildup: 10
     - __name: Production
       hub:
         sku: Premium
-        enable_auto_inflate: true
-        max_throughput_units: 10 # revist this
+        throughput_units: 10 # revist this
         message_retention: 7
         partition_count: 20 # revist this
+      capture:
+        capture_buildup: 10 # revisit this
   required:
     - hub
     - capture
@@ -130,7 +133,7 @@ params:
       required:
         - sku
         - partition_count
-        - enable_auto_inflate
+        - throughput_units
         - zone_redundant
         - message_retention
       properties:
@@ -149,11 +152,12 @@ params:
           default: 1
           minimum: 1
           maximum: 32
-        enable_auto_inflate:
-          type: boolean
-          title: Enable auto-inflate
-          description: Automatically scale up by increasing the number of throughput units to meet usage needs.
-          default: false
+        throughput_units:
+          title: Throughput Units
+          description: The number of throughput units allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
+          type: integer
+          minimum: 1
+          maximum: 40
         zone_redundant:
           type: boolean
           title: Zone redundant
@@ -168,30 +172,6 @@ params:
           minimum: 1
           maximum: 7
       dependencies:
-        enable_auto_inflate:
-          oneOf:
-            - properties:
-                enable_auto_inflate:
-                  const: true
-                max_throughput_units:
-                  type: integer
-                  title: Maximum throughput units
-                  description: The maximum number of throughput units that can be allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learm more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
-                  minimum: 1
-                  maximum: 40
-              required:
-                - max_throughput_units
-            - properties:
-                enable_auto_inflate:
-                  const: false
-                throughput_units:
-                  type: integer
-                  title: Throughput units
-                  description: The number of throughput units allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learm more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
-                  minimum: 1
-                  maximum: 40
-              required:
-                - throughput_units
         sku:
           oneOf:
             - properties:
@@ -200,6 +180,25 @@ params:
                 partition_count:
                   description: The number of partitions created for the Event Hubs. Minimum of 1, maximum of 32. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#partitions). **Cannot be changed after deployment**.
                   $md.immutable: true
+                enable_auto_inflate:
+                  type: boolean
+                  title: Enable auto-inflate
+                  description: Automatically scale up by increasing the number of throughput units to meet usage needs.
+                  default: false
+              required:
+                - enable_auto_inflate
+              dependencies:
+                enable_auto_inflate:
+                  oneOf:
+                    - properties:
+                        enable_auto_inflate:
+                          const: true
+                        throughput_units:
+                          title: Maximum throughput units
+                          description: The maximum number of throughput units that can be allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
+                    - properties:
+                        enable_auto_inflate:
+                          const: false
             - properties:
                 sku:
                   const: Premium
@@ -232,9 +231,9 @@ params:
           title: Data capture buildup
           description: The amount of data built up in your Event Hub before a capture operation occurs. Minimum of 10 MiB, maximum of 500 MiB.
           type: integer
-          default: 314572800
-          minimum: 10485760
-          maximum: 524288000
+          default: 300
+          minimum: 10
+          maximum: 500
     monitoring:
       type: object
       title: Monitoring
@@ -309,7 +308,6 @@ ui:
       - partition_count
       - enable_auto_inflate
       - throughput_units
-      - max_throughput_units
       - message_retention
       - zone_redundant
       - "*"
@@ -319,9 +317,6 @@ ui:
       - capture_interval
       - capture_buildup
       - "*"
-    capture_buildup:
-      ui:field: conversionFieldData
-      unit: Bytes
   monitoring:
     ui:order:
       - mode

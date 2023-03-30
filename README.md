@@ -55,13 +55,13 @@ Form input parameters for configuring a bundle for deployment.
 
 - **`capture`** *(object)*
   - **`arvo_encoding`** *(string)*: Specifies the encoding used for the capture. Must be one of: `['Avro', 'AvroDeflate']`. Default: `Avro`.
-  - **`capture_buildup`** *(integer)*: The amount of data built up in your Event Hub before a capture operation occurs. Minimum of 10 MiB, maximum of 500 MiB. Minimum: `10485760`. Maximum: `524288000`. Default: `314572800`.
+  - **`capture_buildup`** *(integer)*: The amount of data built up in your Event Hub before a capture operation occurs. Minimum of 10 MiB, maximum of 500 MiB. Minimum: `10`. Maximum: `500`. Default: `300`.
   - **`capture_interval`** *(integer)*: The time interval, in seconds, at which the capture to Azure Data Lake will happen. Minimum of 60, maximum of 900. Minimum: `60`. Maximum: `900`. Default: `300`.
 - **`hub`** *(object)*
-  - **`enable_auto_inflate`** *(boolean)*: Automatically scale up by increasing the number of throughput units to meet usage needs. Default: `False`.
   - **`message_retention`** *(integer)*: The number of days to retain the events for this Event Hubs, value should be 1 to 7 days. Minimum: `1`. Maximum: `7`. Default: `1`.
   - **`partition_count`** *(integer)*: Minimum: `1`. Maximum: `32`. Default: `1`.
   - **`sku`** *(string)*: Learn more about the different features and capabilities of each pricing tier [here](https://learn.microsoft.com/en-us/azure/event-hubs/compare-tiers). **Cannot be changed after deployment**. Must be one of: `['Standard', 'Premium']`. Default: `Standard`.
+  - **`throughput_units`** *(integer)*: The number of throughput units allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units). Minimum: `1`. Maximum: `40`.
   - **`zone_redundant`** *(boolean)*: Enable zone redundancy for the Event Hubs. **Cannot be changed after deployment**. Default: `False`.
 - **`monitoring`** *(object)*
   - **`mode`** *(string)*: Enable and customize Function App metric alarms. Default: `AUTOMATED`.
@@ -74,6 +74,9 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
+      "capture": {
+          "capture_buildup": 10
+      },
       "hub": {
           "partition_count": 2,
           "sku": "Standard",
@@ -85,12 +88,14 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
+      "capture": {
+          "capture_buildup": 10
+      },
       "hub": {
-          "enable_auto_inflate": true,
-          "max_throughput_units": 10,
           "message_retention": 7,
           "partition_count": 20,
-          "sku": "Premium"
+          "sku": "Premium",
+          "throughput_units": 10
       }
   }
   ```
