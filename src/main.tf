@@ -17,8 +17,8 @@ resource "azurerm_eventhub_namespace" "main" {
   resource_group_name          = azurerm_resource_group.main.name
   sku                          = var.hub.sku
   auto_inflate_enabled         = var.hub.sku == "Standard" ? var.hub.enable_auto_inflate : false
-  capacity                     = var.hub.enable_auto_inflate ? null : var.hub.throughput_units
-  maximum_throughput_units     = var.hub.enable_auto_inflate ? var.hub.throughput_units : null
+  capacity                     = try(var.hub.enable_auto_inflate ? null : var.hub.throughput_units, null)
+  maximum_throughput_units     = try(var.hub.enable_auto_inflate ? var.hub.throughput_units : null, null)
   zone_redundant               = var.hub.zone_redundant
   minimum_tls_version          = "1.2"
   local_authentication_enabled = false

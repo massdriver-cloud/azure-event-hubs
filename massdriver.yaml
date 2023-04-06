@@ -110,18 +110,14 @@ params:
     - __name: Development
       hub:
         sku: Standard
-        partition_count: 2
-        throughput_units: 2
-      capture:
-        capture_buildup: 10
+        partition_count: 1
+        throughput_units: 1
     - __name: Production
       hub:
         sku: Premium
-        throughput_units: 10 # revist this
+        partition_count: 20
+        throughput_units: 10
         message_retention: 7
-        partition_count: 20 # revist this
-      capture:
-        capture_buildup: 10 # revisit this
   required:
     - hub
     - capture

@@ -74,13 +74,10 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Development",
-      "capture": {
-          "capture_buildup": 10
-      },
       "hub": {
-          "partition_count": 2,
+          "partition_count": 1,
           "sku": "Standard",
-          "throughput_units": 2
+          "throughput_units": 1
       }
   }
   ```
@@ -88,9 +85,6 @@ Form input parameters for configuring a bundle for deployment.
   ```json
   {
       "__name": "Production",
-      "capture": {
-          "capture_buildup": 10
-      },
       "hub": {
           "message_retention": 7,
           "partition_count": 20,
