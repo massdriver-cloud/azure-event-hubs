@@ -17,7 +17,7 @@ Event Hubs is a modern big data streaming platform and event ingestion service t
 
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 
@@ -37,48 +37,8 @@ Form input parameters for configuring a bundle for deployment.
 <summary>View</summary>
 
 <!-- PARAMS:START -->
-## Properties
 
-- **`capture`** *(object)*
-  - **`arvo_encoding`** *(string)*: Specifies the encoding used for the capture. Must be one of: `['Avro', 'AvroDeflate']`. Default: `Avro`.
-  - **`capture_buildup`** *(integer)*: The amount of data built up in your Event Hub before a capture operation occurs. Minimum of 10 MiB, maximum of 500 MiB. Minimum: `10`. Maximum: `500`. Default: `300`.
-  - **`capture_interval`** *(integer)*: The time interval, in seconds, at which the capture to Azure Data Lake will happen. Minimum of 60, maximum of 900. Minimum: `60`. Maximum: `900`. Default: `300`.
-- **`hub`** *(object)*
-  - **`message_retention`** *(integer)*: The number of days to retain the events for this Event Hubs, value should be 1 to 7 days. Minimum: `1`. Maximum: `7`. Default: `1`.
-  - **`partition_count`** *(integer)*: Minimum: `1`. Maximum: `32`. Default: `1`.
-  - **`sku`** *(string)*: Learn more about the different features and capabilities of each pricing tier [here](https://learn.microsoft.com/en-us/azure/event-hubs/compare-tiers). **Cannot be changed after deployment**. Must be one of: `['Standard', 'Premium']`. Default: `Standard`.
-  - **`throughput_units`** *(integer)*: The number of throughput units allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units). Minimum: `1`. Maximum: `40`.
-  - **`zone_redundant`** *(boolean)*: Enable zone redundancy for the Event Hubs. **Cannot be changed after deployment**. Default: `False`.
-- **`monitoring`** *(object)*
-  - **`mode`** *(string)*: Enable and customize Function App metric alarms. Default: `AUTOMATED`.
-    - **One of**
-      - Automated
-      - Custom
-      - Disabled
-## Examples
-
-  ```json
-  {
-      "__name": "Development",
-      "hub": {
-          "partition_count": 1,
-          "sku": "Standard",
-          "throughput_units": 1
-      }
-  }
-  ```
-
-  ```json
-  {
-      "__name": "Production",
-      "hub": {
-          "message_retention": 7,
-          "partition_count": 20,
-          "sku": "Premium",
-          "throughput_units": 10
-      }
-  }
-  ```
+**Params coming soon**
 
 <!-- PARAMS:END -->
 
@@ -92,76 +52,9 @@ Connections from other bundles that this bundle depends on.
 <summary>View</summary>
 
 <!-- CONNECTIONS:START -->
-## Properties
 
-- **`azure_service_principal`** *(object)*: . Cannot contain additional properties.
-  - **`data`** *(object)*
-    - **`client_id`** *(string)*: A valid UUID field.
+**Connections coming soon**
 
-      Examples:
-      ```json
-      "123xyz99-ab34-56cd-e7f8-456abc1q2w3e"
-      ```
-
-    - **`client_secret`** *(string)*
-    - **`subscription_id`** *(string)*: A valid UUID field.
-
-      Examples:
-      ```json
-      "123xyz99-ab34-56cd-e7f8-456abc1q2w3e"
-      ```
-
-    - **`tenant_id`** *(string)*: A valid UUID field.
-
-      Examples:
-      ```json
-      "123xyz99-ab34-56cd-e7f8-456abc1q2w3e"
-      ```
-
-  - **`specs`** *(object)*
-- **`azure_storage_account_data_lake`** *(object)*: . Cannot contain additional properties.
-  - **`data`** *(object)*
-    - **`infrastructure`** *(object)*
-      - **`ari`** *(string)*: Azure Resource ID.
-
-        Examples:
-        ```json
-        "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
-        ```
-
-      - **`endpoint`** *(string)*: Azure Storage Account endpoint authentication. Cannot contain additional properties.
-
-        Examples:
-        ```json
-        "https://storageaccount.blob.core.windows.net/"
-        ```
-
-        ```json
-        "http://storageaccount.file.core.windows.net"
-        ```
-
-        ```json
-        "abfs://filesystem.accountname.dfs.core.windows.net/"
-        ```
-
-        ```json
-        "https://storageaccount.privatelink01.queue.core.windows.net/"
-        ```
-
-    - **`security`** *(object)*: Azure Security Configuration. Cannot contain additional properties.
-      - **`iam`** *(object)*: IAM Roles And Scopes. Cannot contain additional properties.
-        - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
-          - **`role`**: Azure Role.
-
-            Examples:
-            ```json
-            "Storage Blob Data Reader"
-            ```
-
-          - **`scope`** *(string)*: Azure IAM Scope.
-  - **`specs`** *(object)*
-    - **`azure`** *(object)*: .
-      - **`region`** *(string)*: Select the Azure region you'd like to provision your resources in.
 <!-- CONNECTIONS:END -->
 
 </details>
@@ -174,39 +67,9 @@ Resources created by this bundle that can be connected to other bundles.
 <summary>View</summary>
 
 <!-- ARTIFACTS:START -->
-## Properties
 
-- **`azure_event_hubs`** *(object)*: . Cannot contain additional properties.
-  - **`data`** *(object)*
-    - **`infrastructure`** *(object)*
-      - **`ari`** *(string)*: Azure Resource ID.
+**Artifacts coming soon**
 
-        Examples:
-        ```json
-        "/subscriptions/12345678-1234-1234-abcd-1234567890ab/resourceGroups/resource-group-name/providers/Microsoft.Network/virtualNetworks/network-name"
-        ```
-
-      - **`endpoint`** *(string)*: Azure Event Hubs endpoint authentication. Cannot contain additional properties.
-
-        Examples:
-        ```json
-        "sb://eventhub.servicebus.windows.net/"
-        ```
-
-    - **`security`** *(object)*: Azure Security Configuration. Cannot contain additional properties.
-      - **`iam`** *(object)*: IAM Roles And Scopes. Cannot contain additional properties.
-        - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
-          - **`role`**: Azure Role.
-
-            Examples:
-            ```json
-            "Storage Blob Data Reader"
-            ```
-
-          - **`scope`** *(string)*: Azure IAM Scope.
-  - **`specs`** *(object)*
-    - **`azure`** *(object)*: .
-      - **`region`** *(string)*: Select the Azure region you'd like to provision your resources in.
 <!-- ARTIFACTS:END -->
 
 </details>
