@@ -3,7 +3,6 @@ name: azure-event-hubs
 version: 1.0.0
 description: Event Hubs is a modern big data streaming platform and event ingestion service that can seamlessly integrate with other Azure and Microsoft services. The service can process millions of events per second with low latency. The data sent to an event hub (Event Hubs instance) can be transformed and stored by using any real-time analytics providers or batching or storage adapters.
 source_url: https://github.com/massdriver-cloud/azure-event-hubs
-type: application
 MonitorAlarmMetric:
   required: &1
   - severity
