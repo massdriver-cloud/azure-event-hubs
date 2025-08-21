@@ -1,102 +1,100 @@
 schema: draft-07
-name: "azure-event-hubs"
-description: "Event Hubs is a modern big data streaming platform and event ingestion service that can seamlessly integrate with other Azure and Microsoft services. The service can process millions of events per second with low latency. The data sent to an event hub (Event Hubs instance) can be transformed and stored by using any real-time analytics providers or batching or storage adapters."
-source_url: github.com/massdriver-cloud/azure-event-hubs
-access: public
-type: infrastructure
-
-MonitorAlarmMetric: &monitor_alarm_metric
-  required:
-    - severity
-    - frequency
-    - window_size
-    - aggregation
-    - operator
-    - threshold
-  properties:
+name: azure-event-hubs
+version: 1.0.0
+description: Event Hubs is a modern big data streaming platform and event ingestion service that can seamlessly integrate with other Azure and Microsoft services. The service can process millions of events per second with low latency. The data sent to an event hub (Event Hubs instance) can be transformed and stored by using any real-time analytics providers or batching or storage adapters.
+source_url: https://github.com/massdriver-cloud/azure-event-hubs
+MonitorAlarmMetric:
+  required: &1
+  - severity
+  - frequency
+  - window_size
+  - aggregation
+  - operator
+  - threshold
+  properties: &2
     severity:
       title: Severity
       description: The severity of the alarm.
       type: integer
       default: 1
       oneOf:
-        - title: Critical
-          const: 0
-        - title: Error
-          const: 1
-        - title: Warning
-          const: 2
-        - title: Information
-          const: 3
-        - title: Verbose
-          const: 4
+      - title: Critical
+        const: 0
+      - title: Error
+        const: 1
+      - title: Warning
+        const: 2
+      - title: Information
+        const: 3
+      - title: Verbose
+        const: 4
     frequency:
       title: Frequency
       description: The evaluation frequency of the alarms.
       type: string
       default: PT1M
       oneOf:
-        - title: Every 1 minute
-          const: PT1M
-        - title: Every 5 minutes
-          const: PT5M
-        - title: Every 15 minutes
-          const: PT15M
-        - title: Every 30 minutes
-          const: PT30M
-        - title: Every 1 hour
-          const: PT1H
+      - title: Every 1 minute
+        const: PT1M
+      - title: Every 5 minutes
+        const: PT5M
+      - title: Every 15 minutes
+        const: PT15M
+      - title: Every 30 minutes
+        const: PT30M
+      - title: Every 1 hour
+        const: PT1H
     window_size:
       title: Alarm window
       description: The time range over which the alarm is evaluated.
       type: string
       default: PT5M
       oneOf:
-        - title: Every 1 minute
-          const: PT1M
-        - title: Every 5 minutes
-          const: PT5M
-        - title: Every 15 minutes
-          const: PT15M
-        - title: Every 30 minutes
-          const: PT30M
-        - title: Every 1 hour
-          const: PT1H
-        - title: Every 6 hours
-          const: PT6H
-        - title: Every 12 hours
-          const: PT12H
-        - title: Every 24 hours
-          const: P1D
+      - title: Every 1 minute
+        const: PT1M
+      - title: Every 5 minutes
+        const: PT5M
+      - title: Every 15 minutes
+        const: PT15M
+      - title: Every 30 minutes
+        const: PT30M
+      - title: Every 1 hour
+        const: PT1H
+      - title: Every 6 hours
+        const: PT6H
+      - title: Every 12 hours
+        const: PT12H
+      - title: Every 24 hours
+        const: P1D
     aggregation:
       title: Aggregation
       description: The aggregation type of the alarm.
       type: string
       default: Average
       enum:
-        - Average
-        - Count
-        - Minimum
-        - Maximum
-        - Total
+      - Average
+      - Count
+      - Minimum
+      - Maximum
+      - Total
     operator:
       title: Operator
       description: The operator used to compare the metric value to the threshold.
       type: string
       default: GreaterThanOrEqual
       oneOf:
-        - title: Greater than or equal to
-          const: GreaterThanOrEqual
-        - title: Greater than
-          const: GreaterThan
-        - title: Less than or equal to
-          const: LessThanOrEqual
-        - title: Less than
-          const: LessThan
-        - title: Equals
-          const: Equals
-        - title: Not equal to
-          const: NotEquals
+      - title: Greater than or equal to
+        const: GreaterThanOrEqual
+      - title: Greater than
+        const: GreaterThan
+      - title: Less than or equal to
+        const: LessThanOrEqual
+      - title: Less than
+        const: LessThan
+      - title: Equals
+        const: Equals
+      - title: Not equal to
+        const: NotEquals
     threshold:
       title: Threshold
       description: The percentage threshold for the metric to trigger an alarm.
@@ -104,44 +102,43 @@ MonitorAlarmMetric: &monitor_alarm_metric
       default: 90
       minimum: 0
       maximum: 100
-
 params:
   examples:
-    - __name: Development
-      hub:
-        sku: Standard
-        partition_count: 1
-        throughput_units: 1
-    - __name: Production
-      hub:
-        sku: Premium
-        partition_count: 20
-        throughput_units: 10
-        message_retention: 7
+  - __name: Development
+    hub:
+      sku: Standard
+      partition_count: 1
+      throughput_units: 1
+  - __name: Production
+    hub:
+      sku: Premium
+      partition_count: 20
+      throughput_units: 10
+      message_retention: 7
   required:
-    - hub
-    - capture
-    - monitoring
+  - hub
+  - capture
+  - monitoring
   properties:
     hub:
       type: object
       title: Event Hub
       required:
-        - sku
-        - partition_count
-        - throughput_units
-        - zone_redundant
-        - message_retention
+      - sku
+      - partition_count
+      - throughput_units
+      - zone_redundant
+      - message_retention
       properties:
         sku:
           type: string
           title: Pricing tier
           description: Learn more about the different features and capabilities of each pricing tier [here](https://learn.microsoft.com/en-us/azure/event-hubs/compare-tiers). **Cannot be changed after deployment**.
           default: Standard
-          $md.immutable: true
+          "$md.immutable": true
           enum:
-            - Standard
-            - Premium
+          - Standard
+          - Premium
         partition_count:
           title: Partition count
           type: integer
@@ -159,7 +156,7 @@ params:
           title: Zone redundant
           description: Enable zone redundancy for the Event Hubs. **Cannot be changed after deployment**.
           default: false
-          $md.immutable: true
+          "$md.immutable": true
         message_retention:
           type: integer
           title: Message retention
@@ -170,43 +167,43 @@ params:
       dependencies:
         sku:
           oneOf:
-            - properties:
-                sku:
-                  const: Standard
-                partition_count:
-                  description: The number of partitions created for the Event Hubs. Minimum of 1, maximum of 32. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#partitions). **Cannot be changed after deployment**.
-                  $md.immutable: true
-                enable_auto_inflate:
-                  type: boolean
-                  title: Enable auto-inflate
-                  description: Automatically scale up by increasing the number of throughput units to meet usage needs.
-                  default: false
-              required:
-                - enable_auto_inflate
-              dependencies:
-                enable_auto_inflate:
-                  oneOf:
-                    - properties:
-                        enable_auto_inflate:
-                          const: true
-                        throughput_units:
-                          title: Maximum throughput units
-                          description: The maximum number of throughput units that can be allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
-                    - properties:
-                        enable_auto_inflate:
-                          const: false
-            - properties:
-                sku:
-                  const: Premium
-                partition_count:
-                  description: The number of partitions created for the Event Hubs. Minimum of 1, maximum of 32. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#partitions).
+          - properties:
+              sku:
+                const: Standard
+              partition_count:
+                description: The number of partitions created for the Event Hubs. Minimum of 1, maximum of 32. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#partitions). **Cannot be changed after deployment**.
+                "$md.immutable": true
+              enable_auto_inflate:
+                type: boolean
+                title: Enable auto-inflate
+                description: Automatically scale up by increasing the number of throughput units to meet usage needs.
+                default: false
+            required:
+            - enable_auto_inflate
+            dependencies:
+              enable_auto_inflate:
+                oneOf:
+                - properties:
+                    enable_auto_inflate:
+                      const: true
+                    throughput_units:
+                      title: Maximum throughput units
+                      description: The maximum number of throughput units that can be allocated for the Event Hubs. Minimum of 1, maximum of 40. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#throughput-units).
+                - properties:
+                    enable_auto_inflate:
+                      const: false
+          - properties:
+              sku:
+                const: Premium
+              partition_count:
+                description: The number of partitions created for the Event Hubs. Minimum of 1, maximum of 32. [Learn more here](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-scalability#partitions).
     capture:
       title: Event capture settings
       type: object
       required:
-        - arvo_encoding
-        - capture_interval
-        - capture_buildup
+      - arvo_encoding
+      - capture_interval
+      - capture_buildup
       properties:
         arvo_encoding:
           title: Avro encoding
@@ -214,8 +211,8 @@ params:
           description: Specifies the encoding used for the capture.
           default: Avro
           enum:
-            - Avro
-            - AvroDeflate
+          - Avro
+          - AvroDeflate
         capture_interval:
           title: Data capture interval
           description: The time interval, in seconds, at which the capture to Azure Data Lake will happen. Minimum of 60, maximum of 900.
@@ -240,100 +237,106 @@ params:
           type: string
           default: AUTOMATED
           oneOf:
-            - const: AUTOMATED
-              title: Automated
-            - const: CUSTOM
-              title: Custom
-            - const: DISABLED
-              title: Disabled
+          - const: AUTOMATED
+            title: Automated
+          - const: CUSTOM
+            title: Custom
+          - const: DISABLED
+            title: Disabled
       dependencies:
         mode:
           oneOf:
-            - properties:
-                mode:
-                  const: AUTOMATED
-            - properties:
-                mode:
-                  const: DISABLED
-            - properties:
-                mode:
-                  const: CUSTOM
-                alarms:
-                  type: object
-                  title: Alarms
-                  properties:
-                    cpu_metric_alert:
-                      title: CPU
-                      type: object
-                      <<: *monitor_alarm_metric
-                    memory_metric_alert:
-                      title: Memory
-                      type: object
-                      <<: *monitor_alarm_metric
-                    server_errors_metric_alert:
-                      title: Server Errors
-                      type: object
-                      <<: *monitor_alarm_metric
-
+          - properties:
+              mode:
+                const: AUTOMATED
+          - properties:
+              mode:
+                const: DISABLED
+          - properties:
+              mode:
+                const: CUSTOM
+              alarms:
+                type: object
+                title: Alarms
+                properties:
+                  cpu_metric_alert:
+                    title: CPU
+                    type: object
+                    required: *1
+                    properties: *2
+                  memory_metric_alert:
+                    title: Memory
+                    type: object
+                    required: *1
+                    properties: *2
+                  server_errors_metric_alert:
+                    title: Server Errors
+                    type: object
+                    required: *1
+                    properties: *2
 connections:
   required:
   - azure_service_principal
   - azure_storage_account_data_lake
   properties:
     azure_service_principal:
-      $ref: massdriver/azure-service-principal
+      "$ref": massdriver/azure-service-principal
     azure_storage_account_data_lake:
-      $ref: massdriver/azure-storage-account-data-lake
-
+      "$ref": massdriver/azure-storage-account-data-lake
 artifacts:
   required:
-    - azure_event_hubs
+  - azure_event_hubs
   properties:
     azure_event_hubs:
-      $ref: massdriver/azure-event-hubs
-
+      "$ref": massdriver/azure-event-hubs
 ui:
   ui:order:
-    - hub
-    - capture
-    - monitoring
-    - "*"
+  - hub
+  - capture
+  - monitoring
+  - "*"
   hub:
     ui:order:
-      - sku
-      - partition_count
-      - enable_auto_inflate
-      - throughput_units
-      - message_retention
-      - zone_redundant
-      - "*"
+    - sku
+    - partition_count
+    - enable_auto_inflate
+    - throughput_units
+    - message_retention
+    - zone_redundant
+    - "*"
   capture:
     ui:order:
-      - arvo_encoding
-      - capture_interval
-      - capture_buildup
-      - "*"
+    - arvo_encoding
+    - capture_interval
+    - capture_buildup
+    - "*"
   monitoring:
     ui:order:
-      - mode
-      - alarms
-      - '*'
+    - mode
+    - alarms
+    - "*"
     alarms:
       ui:order:
-        - cpu_metric_alert
-        - memory_metric_alert
-        - server_load_metric_alert
-        - '*'
-      cpu_metric_alert: &monitor_alarm_metric_ui
-        ui:order:
-          - severity
-          - operator
-          - aggregation
-          - frequency
-          - window_size
-          - threshold
-          - '*'
+      - cpu_metric_alert
+      - memory_metric_alert
+      - server_load_metric_alert
+      - "*"
+      cpu_metric_alert:
+        ui:order: &3
+        - severity
+        - operator
+        - aggregation
+        - frequency
+        - window_size
+        - threshold
+        - "*"
       memory_metric_alert:
-        << : *monitor_alarm_metric_ui
+        ui:order: *3
       server_errors_metric_alert:
-        << : *monitor_alarm_metric_ui
+        ui:order: *3
+steps:
+- path: src
+  provisioner: opentofu
+  config:
+    checkov:
+      enable: true
