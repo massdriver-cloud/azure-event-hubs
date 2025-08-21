@@ -1,7 +1,6 @@
 resource "massdriver_artifact" "azure_event_hubs" {
-  field                = "azure_event_hubs"
-  provider_resource_id = azurerm_eventhub_namespace.main.id
-  name                 = "Azure Event Hubs endpoint"
+  field    = "azure_event_hubs"
+  name     = "Azure Event Hubs endpoint"
   artifact = jsonencode(
     {
       data = {
