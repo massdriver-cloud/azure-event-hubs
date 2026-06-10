@@ -276,19 +276,19 @@ params:
                     properties: *2
 connections:
   required:
-  - azure_service_principal
+  - azure_authentication
   - azure_storage_account_data_lake
   properties:
-    azure_service_principal:
-      "$ref": massdriver/azure-service-principal
+    azure_authentication:
+      "$ref": azure-service-principal
     azure_storage_account_data_lake:
-      "$ref": massdriver/azure-storage-account-data-lake
+      "$ref": azure-storage-account-data-lake
 artifacts:
   required:
   - azure_event_hubs
   properties:
     azure_event_hubs:
-      "$ref": massdriver/azure-event-hubs
+      "$ref": azure-event-hubs
 ui:
   ui:order:
   - hub
