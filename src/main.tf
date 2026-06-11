@@ -45,7 +45,7 @@ resource "azurerm_eventhub" "main" {
       name                = "EventHubArchive.AzureBlockBlob"
       archive_name_format = "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}"
       blob_container_name = "${var.md_metadata.name_prefix}-eventhub-capture"
-      storage_account_id  = var.azure_storage_account_data_lake.data.infrastructure.ari
+      storage_account_id  = var.azure_storage_account_data_lake.infrastructure.ari
     }
   }
 }
